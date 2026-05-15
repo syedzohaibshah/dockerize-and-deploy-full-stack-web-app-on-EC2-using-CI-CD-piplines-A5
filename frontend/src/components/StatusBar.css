@@ -1,0 +1,53 @@
+.status-bar {
+  padding: 1rem;
+  text-align: center;
+  font-weight: 500;
+  display: flex;
+  justify-content: center;
+}
+
+.status-content {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: white;
+}
+
+.status-indicator {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  animation: pulse 2s infinite;
+}
+
+.status-connected {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+.status-connected .status-indicator {
+  background: #4ade80;
+}
+
+.status-disconnected {
+  background: rgba(0, 0, 0, 0.15);
+}
+
+.status-disconnected .status-indicator {
+  background: #ef4444;
+  animation: none;
+}
+
+.status-checking .status-indicator {
+  background: #fbbf24;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}

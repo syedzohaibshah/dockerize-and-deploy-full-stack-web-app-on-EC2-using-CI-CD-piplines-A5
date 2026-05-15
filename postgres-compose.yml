@@ -1,0 +1,22 @@
+services:
+  db:
+    image: postgres:15-alpine
+    restart: always
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: notes_db
+    ports:
+      - "5432:5432"
+    networks:
+      - app-network
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+volumes:
+  db_data:
+
+networks:
+  app-network:
+    external: true
+    
