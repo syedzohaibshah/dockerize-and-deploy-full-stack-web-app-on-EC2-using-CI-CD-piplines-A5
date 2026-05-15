@@ -31,7 +31,7 @@ services:
 
   backend:
     build: ./backend
-    image: backend-docker
+    image: 741448955179.dkr.ecr.eu-north-1.amazonaws.com/notes-backend:latest
     ports:
       - "5001:5001"
     depends_on:
@@ -48,7 +48,7 @@ services:
 
   frontend:
     build: ./frontend
-    image: frontend-docker-v2
+    image: 741448955179.dkr.ecr.eu-north-1.amazonaws.com/notes-frontend:latest
     ports:
       - "3000:3000"
     environment:
