@@ -76,5 +76,6 @@ jobs:
           port: ${{ secrets.PORT }}
           script: |
             cd dockerize-and-deploy-full-stack-web-app-on-EC2-using-CI-CD-piplines-A5
-            git pull origin main
+            git fetch origin main
+            git reset --hard origin/main
             docker compose -f docker-compose.yml up -d
