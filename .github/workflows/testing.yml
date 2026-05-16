@@ -1,21 +1,16 @@
-
-
-
 ---
 name: "A5-devops"
 
 run-name: |
-      "devops A5  workflow with devops class triggered by ${{github.actor}}
-      with ${{github.event_name}} event
-      on branch ${{github.repository}}"
-
+  "devops A5  workflow with devops class triggered by ${{github.actor}}
+  with ${{github.event_name}} event
+  on branch ${{github.repository}}"
 
 on:
   pull_request:
     branches:
       - main
   workflow_dispatch:
-
 
 jobs:
   test-frontend:
@@ -29,8 +24,8 @@ jobs:
       - run: cd frontend && npm run lint
       - run: cd frontend && npm test
       - run: cd frontend && npm run build
-      - uses: actions/upload-artifact@v7 
-        with: 
+      - uses: actions/upload-artifact@v7
+        with:
           name: frontend-build
           path: ./frontend/build/*
       - uses: vitr/actions-build-and-upload-to-ecs@master
@@ -42,7 +37,8 @@ jobs:
           region: eu-north-1
           tags: latest-zoh,${{ github.sha }}
           create_repo: false
-          path: ./frontend      
+          path: ./frontend
+          dockerfile: ./frontend/Dockerfile
 
   test-backend:
     runs-on: ubuntu-latest
@@ -52,9 +48,9 @@ jobs:
         with:
           node-version: "18"
       - run: cd backend && npm install
-      - run: cd backend && node -c server.js 
+      - run: cd backend && node -c server.js
       - run: cd frontend && node server.js &
-      
+
   deploy-to-testing-instance:
     runs-on: ubuntu-latest
     steps:
