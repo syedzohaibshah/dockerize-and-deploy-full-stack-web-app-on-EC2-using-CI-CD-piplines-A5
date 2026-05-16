@@ -33,8 +33,16 @@ jobs:
         with: 
           name: frontend-build
           path: ./frontend/build/*
-       
-
+      - uses: vitr/actions-build-and-upload-to-ecs@master
+        with:
+          access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          account_id: ${{ secrets.AWS_ACCOUNT_ID }}
+          repo: notes-frontend
+          region: eu-north-1
+          tags: latest-zoh,${{ github.sha }}
+          create_repo: false
+          path: ./frontend      
 
   test-backend:
     runs-on: ubuntu-latest
@@ -47,3 +55,7 @@ jobs:
       - run: cd backend && node -c server.js 
       - run: cd frontend && node server.js &
       
+  deploy-to-testing-instance:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
