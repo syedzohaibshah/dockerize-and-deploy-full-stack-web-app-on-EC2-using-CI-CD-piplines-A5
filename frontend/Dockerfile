@@ -1,4 +1,5 @@
-FROM node:alpine
+# Stage 1: Build
+FROM node:alpine AS build
 
 WORKDIR /app
 
@@ -10,6 +11,18 @@ COPY . .
 
 RUN npm run build
 
-EXPOSE 5173
+# Stage 2: Production
+FROM node:alpine
 
-CMD ["npm", "start"]
+WORKDIR /app
+
+RUN npm install -g serve
+
+COPY --from=build /app/build ./build
+
+ARG REACT_APP_API_URL=http://backend:5001
+ENV REACT_APP_API_URL=${REACT_APP_API_URL}
+
+EXPOSE 3000
+
+CMD ["serve", "-s", "build", "-l", "3000"]

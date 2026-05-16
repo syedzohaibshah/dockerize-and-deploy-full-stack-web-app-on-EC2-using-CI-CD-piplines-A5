@@ -5,6 +5,8 @@ import NoteList from './components/NoteList';
 import NoteForm from './components/NoteForm';
 import StatusBar from './components/StatusBar';
 
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5001';
+
 function App() {
   const [notes, setNotes] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -20,7 +22,7 @@ function App() {
 
   const checkBackendHealth = async () => {
     try {
-      await axios.get('/api/health');
+      await axios.get(`${API_BASE_URL}/api/health`);
       setBackendStatus('connected');
     } catch (err) {
       setBackendStatus('disconnected');
@@ -30,7 +32,7 @@ function App() {
   const fetchNotes = async () => {
     try {
       setLoading(true);
-      const response = await axios.get('/api/notes');
+      const response = await axios.get(`${API_BASE_URL}/api/notes`);
       setNotes(response.data);
       setError(null);
     } catch (err) {
@@ -44,7 +46,7 @@ function App() {
     try {
       if (selectedNote) {
         const response = await axios.put(
-          `/api/notes/${selectedNote.id}`,
+          `${API_BASE_URL}/api/notes/${selectedNote.id}`,
           noteData,
         );
         setNotes(
@@ -54,7 +56,7 @@ function App() {
         );
         setSelectedNote(null);
       } else {
-        const response = await axios.post('/api/notes', noteData);
+        const response = await axios.post(`${API_BASE_URL}/api/notes`, noteData);
         setNotes([response.data, ...notes]);
       }
       setError(null);
@@ -65,7 +67,7 @@ function App() {
 
   const handleDeleteNote = async (id) => {
     try {
-      await axios.delete(`/api/notes/${id}`);
+      await axios.delete(`${API_BASE_URL}/api/notes/${id}`);
       setNotes(notes.filter((note) => note.id !== id));
       if (selectedNote?.id === id) {
         setSelectedNote(null);
