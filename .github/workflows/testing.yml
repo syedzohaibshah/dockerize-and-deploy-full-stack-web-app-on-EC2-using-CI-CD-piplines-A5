@@ -35,7 +35,7 @@ jobs:
           account_id: ${{ secrets.AWS_ACCOUNT_ID }}
           repo: notes-frontend
           region: eu-north-1
-          tags: latest-zoh,${{ github.sha }}
+          tags: latest,${{ github.sha }}
           create_repo: false
           path: ./frontend
           dockerfile: ./frontend/Dockerfile
@@ -57,11 +57,11 @@ jobs:
           account_id: ${{ secrets.AWS_ACCOUNT_ID }}
           repo: notes-backend
           region: eu-north-1
-          tags: latest-zoh,${{ github.sha }}
+          tags: latest,${{ github.sha }}
           create_repo: false
           path: ./backend
           dockerfile: ./backend/Dockerfile
-                                             
+
   deploy-to-testing-instance:
     runs-on: ubuntu-latest
     needs: [test-frontend, test-backend]
@@ -78,4 +78,3 @@ jobs:
             cd dockerize-and-deploy-full-stack-web-app-on-EC2-using-CI-CD-piplines-A5
             git pull origin main
             docker compose -f docker-compose.yml up -d
-                       
