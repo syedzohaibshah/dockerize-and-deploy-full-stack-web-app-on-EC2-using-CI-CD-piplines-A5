@@ -69,13 +69,19 @@ jobs:
       - uses: actions/checkout@v6
       - name: Execute remote SSH commands using SSH key
         uses: appleboy/ssh-action@v1
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         with:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.KEY }}
           port: ${{ secrets.PORT }}
+          envs: AWS_ACCESS_KEY_ID,AWS_SECRET_ACCESS_KEY
           script: |
             cd dockerize-and-deploy-full-stack-web-app-on-EC2-using-CI-CD-piplines-A5
             git fetch origin main
             git reset --hard origin/main
+            aws ecr get-login-password --region eu-north-1 | docker login --username AWS --password-stdin 741448955179.dkr.ecr.eu-north-1.amazonaws.com
+            docker compose -f docker-compose.yml pull
             docker compose -f docker-compose.yml up -d
