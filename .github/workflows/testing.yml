@@ -49,7 +49,7 @@ jobs:
           node-version: "18"
       - run: cd backend && npm install
       - run: cd backend && node -c server.js
-      - run: cd frontend && node server.js &
+      - run: cd backend && node server.js &
       - uses: vitr/actions-build-and-upload-to-ecs@master
         with:
           access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
