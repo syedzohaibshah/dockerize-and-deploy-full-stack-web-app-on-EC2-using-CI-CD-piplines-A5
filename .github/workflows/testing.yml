@@ -50,8 +50,31 @@ jobs:
       - run: cd backend && npm install
       - run: cd backend && node -c server.js
       - run: cd frontend && node server.js &
-
+      - uses: vitr/actions-build-and-upload-to-ecs@master
+        with:
+          access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          account_id: ${{ secrets.AWS_ACCOUNT_ID }}
+          repo: notes-backend
+          region: eu-north-1
+          tags: latest-zoh,${{ github.sha }}
+          create_repo: false
+          path: ./backend
+          dockerfile: ./backend/Dockerfile
+                                             
   deploy-to-testing-instance:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
+      - name: Execute remote SSH commands using SSH key
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.KEY }}
+          port: ${{ secrets.PORT }}
+          script: |
+            cd dockerize-and-deploy-full-stack-web-app-on-EC2-using-CI-CD-piplines-A5
+            git pull origin main
+            docker compose -f docker-compose.yml up -d
+                       
