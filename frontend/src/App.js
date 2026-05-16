@@ -1,18 +1,19 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
-import "./App.css";
-import NoteList from "./components/NoteList";
-import NoteForm from "./components/NoteForm";
-import StatusBar from "./components/StatusBar";
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import './App.css';
+import NoteList from './components/NoteList';
+import NoteForm from './components/NoteForm';
+import StatusBar from './components/StatusBar';
 
 const API_BASE_URL =
   process.env.REACT_APP_API_URL || `http://${window.location.hostname}:5001`;
+
 function App() {
   const [notes, setNotes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [selectedNote, setSelectedNote] = useState(null);
-  const [backendStatus, setBackendStatus] = useState("checking");
+  const [backendStatus, setBackendStatus] = useState('checking');
 
   // Check backend health on mount
   useEffect(() => {
@@ -23,9 +24,9 @@ function App() {
   const checkBackendHealth = async () => {
     try {
       await axios.get(`${API_BASE_URL}/api/health`);
-      setBackendStatus("connected");
+      setBackendStatus('connected');
     } catch (err) {
-      setBackendStatus("disconnected");
+      setBackendStatus('disconnected');
     }
   };
 
@@ -36,7 +37,7 @@ function App() {
       setNotes(response.data);
       setError(null);
     } catch (err) {
-      setError("Failed to load notes. Make sure backend is running.");
+      setError('Failed to load notes. Make sure backend is running.');
     } finally {
       setLoading(false);
     }
@@ -64,7 +65,7 @@ function App() {
       }
       setError(null);
     } catch (err) {
-      setError("Failed to save note");
+      setError('Failed to save note');
     }
   };
 
@@ -77,7 +78,7 @@ function App() {
       }
       setError(null);
     } catch (err) {
-      setError("Failed to delete note");
+      setError('Failed to delete note');
     }
   };
 
