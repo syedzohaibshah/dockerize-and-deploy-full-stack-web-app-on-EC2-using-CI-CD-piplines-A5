@@ -81,7 +81,7 @@ function App() {
       <header className="app-header">
         <h1>📝 Notes Application</h1>
         <p className="subtitle">
-          Simple Multi-Service Demo: React + Node.js + PostgreSQL
+          updated by dev - Simple Multi-Service Demo: React + Node.js + PostgreSQL
         </p>
       </header>
 
