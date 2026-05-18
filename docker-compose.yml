@@ -1,4 +1,4 @@
-version: '3.8'
+version: "3.8"
 
 services:
   db:
@@ -12,6 +12,7 @@ services:
       - "5432:5432"
     volumes:
       - db_data:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
       - app-network
 
@@ -30,7 +31,6 @@ services:
       - app-network
 
   backend:
-    build: ./backend
     image: 741448955179.dkr.ecr.eu-north-1.amazonaws.com/notes-backend:latest
     pull_policy: always
     ports:
@@ -48,13 +48,12 @@ services:
       - app-network
 
   frontend:
-    build: ./frontend
     image: 741448955179.dkr.ecr.eu-north-1.amazonaws.com/notes-frontend:latest
     pull_policy: always
     ports:
       - "3000:3000"
     environment:
-       - REACT_APP_API_URL=http://backend:5001 
+      - REACT_APP_API_URL=http://backend:5001
     depends_on:
       - backend
     networks:
