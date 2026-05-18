@@ -78,4 +78,6 @@ jobs:
             docker compose -f docker-compose.yml down
             docker rmi $(docker images -a -q)
             git pull origin main
+            aws ecr get-login-password --region eu-north-1 | docker login --username AWS --password-stdin 741448955179.dkr.ecr.eu-north-1.amazonaws.com
+
             docker compose -f docker-compose.yml up -d
