@@ -10,3 +10,10 @@ yarn-error.log*
 build/
 dist/
 *.md
+
+
+node_modules/
+.env
+.env.local
+npm-debug.log
+*.log

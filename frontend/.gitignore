@@ -31,3 +31,16 @@ yarn-error.log*
 
 # Markdown documentation
 *.md
+
+
+node_modules/
+.DS_Store
+*.pem
+*.log
+.env
+.env.localnode_modules/
+build/
+dist/
+coverage/
+.env.local
+npm-debug.log

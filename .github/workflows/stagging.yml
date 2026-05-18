@@ -1,5 +1,5 @@
 ---
-name: "A5-devops"
+name: "A5-devops-stagging-workflow"
 
 run-name: |
   "devops A5  workflow with devops class triggered by ${{github.actor}}
@@ -7,7 +7,7 @@ run-name: |
   on branch ${{github.repository}}"
 
 on:
-  pull_request:
+  push:
     branches:
       - main
   workflow_dispatch:
@@ -40,17 +40,17 @@ jobs:
           path: ./frontend
           dockerfile: ./frontend/Dockerfile
 
-  test-backend:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+   test-backend:
+      runs-on: ubuntu-latest
+      steps:
+      	- uses: actions/checkout@v4
+      	- uses: actions/setup-node@v4
         with:
           node-version: "18"
-      - run: cd backend && npm install
-      - run: cd backend && node -c server.js
-      - run: cd backend && node server.js &
-      - uses: vitr/actions-build-and-upload-to-ecs@master
+      	- run: cd backend && npm install
+      	- run: cd backend && node -c server.js
+      	- run: cd backend && node server.js &
+      	- uses: vitr/actions-build-and-upload-to-ecs@master
         with:
           access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -61,26 +61,22 @@ jobs:
           create_repo: false
           path: ./backend
           dockerfile: ./backend/Dockerfile
-
-  deploy-to-testing-instance:
-    runs-on: ubuntu-latest
-    needs: [test-frontend, test-backend]
-    steps:
-      - name: Execute remote SSH commands using SSH key
-        uses: appleboy/ssh-action@v1
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        with:
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.USERNAME }}
-          key: ${{ secrets.KEY }}
-          port: ${{ secrets.PORT }}
-          envs: AWS_ACCESS_KEY_ID,AWS_SECRET_ACCESS_KEY
-          script: |
-            cd dockerize-and-deploy-full-stack-web-app-on-EC2-using-CI-CD-piplines-A5
-            git fetch origin main
-            git reset --hard origin/main
-            aws ecr get-login-password --region eu-north-1 | docker login --username AWS --password-stdin 741448955179.dkr.ecr.eu-north-1.amazonaws.com
-            docker compose -f docker-compose.yml pull
-            docker compose -f docker-compose.yml up -d
+   
+   deploy-on-ec2:
+     runs-on: ubuntu-latest
+     needs: [test-frontend,test-backend]
+     steps:
+       - name: Multiple commands
+  	 uses: appleboy/ssh-action@v1
+  	 with:
+           host: ${{ secrets.HOST_2 }}
+           username: ${{ secrets.USERNAME }}
+           key: ${{ secrets.KEY }}
+           port: ${{ secrets.PORT }}
+           script: |
+             cd dockerize-and-deploy-full-stack-web-app-on-EC2-using-CI-CD-piplines-A5
+             docker compose -f docker-compose.yml down 
+             docker rmi $(docker images -a -q)
+             git pull origin main
+             docker compose -f docker-compose.yml up -d
+                
